@@ -77,3 +77,6 @@
 textarea::-webkit-scrollbar {
   display: none;
 }
+.hideScrollbar::-webkit-scrollbar {
+  display: none;
+}

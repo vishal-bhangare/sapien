@@ -26,7 +26,7 @@ const Sidebar = ({ user }: Props) => {
     router.push("/auth");
   };
   return (
-    <div className="dark flex flex-col flex-shrink-0 gap-4 overflow-x-hidden bg-gray-900 text-white w-[260px] p-4">
+    <div className="dark flex flex-col flex-shrink-0 gap-4 overflow-x-hidden bg-gray-900 text-white w-[260px] p-4 sm:hidden md:block">
       <div className="flex items-center justify-start gap-2">
         <Avatar className="w-8 h-8">
           <AvatarImage src="https://github.com/shadcn.png" />
