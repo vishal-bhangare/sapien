@@ -10,6 +10,5 @@ export default async function openaiClient(query: string) {
     messages: [{ role: "user", content: query }],
     model: "gpt-3.5-turbo",
   });
-  console.log(response);
   return JSON.stringify(response.choices[0]!.message!.content);
 }

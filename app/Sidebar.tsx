@@ -14,6 +14,7 @@ import {
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import { signOut } from "./auth/actions";
+import { Loader2 } from "lucide-react";
 
 interface Props {
   user: { first_name?: string; last_name?: string };
@@ -23,7 +24,7 @@ const Sidebar = ({ user }: Props) => {
   const router = useRouter();
   const handleSignOut = async () => {
     await signOut();
-    router.refresh();
+    router.push("/auth");
   };
   return (
     <div className="dark h-full w-[260px] flex flex-col flex-shrink-0 gap-4 overflow-x-hidden bg-gray-900 text-white  p-4 sm:hidden md:flex">
@@ -51,7 +52,13 @@ const Sidebar = ({ user }: Props) => {
                 }
               />
             </Avatar>
-            {user.first_name + " " + user.last_name}
+            {user.first_name ? (
+              <span>{user.first_name + " " + user.last_name}</span>
+            ) : (
+              <div className="flex items-center gap-3 ">
+                Loading <Loader2 className="h-4 w-4 animate-spin" />
+              </div>
+            )}
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-[220px] my-1">
             <DropdownMenuItem>Plans</DropdownMenuItem>

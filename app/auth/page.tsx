@@ -1,17 +1,20 @@
+"use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import React from "react";
 import Signup from "./components/Signup";
 import Signin from "./components/Signin";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import readUserSession from "@/lib/readUserSession";
 
-const Auth = async () => {
-  const session = await readUserSession();
-
-  if (session) return redirect("/");
-
+const Auth = () => {
+  const router = useRouter();
+  async function checkSession() {
+    const session = await readUserSession();
+    if (session) return router.push("/");
+  }
+  checkSession();
   return (
     <div className="bg-black text-white w-full min-h-full flex flex-col justify-between items-center p-8">
       <header className="self-start text-2xl font-bold w-full mb-5">
