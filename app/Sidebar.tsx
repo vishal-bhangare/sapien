@@ -12,8 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { HiOutlinePencilAlt } from "react-icons/hi";
-import { signOut } from "@/lib/supabase/helpers";
 import { useRouter } from "next/navigation";
+import { signOut } from "./auth/actions";
 
 interface Props {
   user: { first_name?: string; last_name?: string };
@@ -21,12 +21,12 @@ interface Props {
 
 const Sidebar = ({ user }: Props) => {
   const router = useRouter();
-  const handleLogOut = async () => {
+  const handleSignOut = async () => {
     await signOut();
-    router.push("/auth");
+    router.refresh();
   };
   return (
-    <div className="dark flex flex-col flex-shrink-0 gap-4 overflow-x-hidden bg-gray-900 text-white w-[260px] p-4 sm:hidden md:block">
+    <div className="dark h-full w-[260px] flex flex-col flex-shrink-0 gap-4 overflow-x-hidden bg-gray-900 text-white  p-4 sm:hidden md:flex">
       <div className="flex items-center justify-start gap-2">
         <Avatar className="w-8 h-8">
           <AvatarImage src="https://github.com/shadcn.png" />
@@ -58,7 +58,7 @@ const Sidebar = ({ user }: Props) => {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem onClick={handleLogOut}>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

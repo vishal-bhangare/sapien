@@ -15,7 +15,8 @@ import {
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { signInWithEmailAndPassword } from "@/lib/supabase/helpers";
+import { signInWithEmailAndPassword } from "../actions";
+import { useRouter } from "next/navigation";
 
 const signinSchema = z.object({
   email: z.string().email(),
@@ -23,6 +24,7 @@ const signinSchema = z.object({
 });
 
 const Signin = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -32,8 +34,8 @@ const Signin = () => {
   });
   async function onSubmit(values: z.infer<typeof signinSchema>) {
     const res = await signInWithEmailAndPassword(values);
+    router.refresh();
     const { data, error } = JSON.parse(res);
-    console.log(data);
   }
   return (
     <Form {...form}>

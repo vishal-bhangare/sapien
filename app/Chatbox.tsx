@@ -37,12 +37,17 @@ const Chatbox = () => {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   function onSubmit({ query }: inputFormData) {
-    setMessage((message) => ({ query: query, reply: "" }));
+    setMessage(() => ({ query: query, reply: "" }));
     startTransition(async () => {
       const res = await openaiClient(query);
       const reply = JSON.parse(res);
       reset({ query: "" });
-      setMessage(() => ({ query: query, reply: reply }));
+      if (reply) setMessage(() => ({ query: query, reply: reply }));
+      else
+        setMessage(() => ({
+          query: query,
+          reply: "Oops!, could'nt found appropriate answer.",
+        }));
     });
   }
 

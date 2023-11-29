@@ -4,12 +4,13 @@ import Link from "next/link";
 import React from "react";
 import Signup from "./components/Signup";
 import Signin from "./components/Signin";
-import getUserSession from "@/lib/supabase/session";
 import { redirect } from "next/navigation";
+import readUserSession from "@/lib/readUserSession";
 
 const Auth = async () => {
-  const { data } = await getUserSession();
-  if (data.session) return redirect("/");
+  const session = await readUserSession();
+
+  if (session) return redirect("/");
 
   return (
     <div className="bg-black text-white w-full min-h-full flex flex-col justify-between items-center p-8">
