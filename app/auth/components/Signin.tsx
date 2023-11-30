@@ -34,8 +34,7 @@ const Signin = () => {
   });
   async function onSubmit(values: z.infer<typeof signinSchema>) {
     const res = await signInWithEmailAndPassword(values);
-    router.refresh();
-    const { data, error } = JSON.parse(res);
+    router.push("/");
   }
   return (
     <Form {...form}>

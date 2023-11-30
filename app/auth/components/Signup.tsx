@@ -43,11 +43,7 @@ const Signup = () => {
   });
   async function onSubmit(values: z.infer<typeof signupSchema>) {
     const res = await signUpWithEmailAndPassword(values);
-    router.refresh();
-    const { data, error } = JSON.parse(res);
-    if (error) console.log(error);
-    else console.log(data);
-    console.log(values);
+    router.push("/");
   }
   return (
     <Form {...form}>

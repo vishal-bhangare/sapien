@@ -1,3 +1,5 @@
+import { Message, chat } from "@/app/entities";
+
 export type Json =
   | string
   | number
@@ -9,29 +11,8 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      todos: {
-        Row: {
-          created_at: string;
-          id: string;
-          is_complete: boolean;
-          title: string;
-          user_id: string;
-        };
-        Insert: {
-          created_at?: string;
-          id?: string;
-          is_complete?: boolean;
-          title: string;
-          user_id?: string;
-        };
-        Update: {
-          created_at?: string;
-          id?: string;
-          is_complete?: boolean;
-          title?: string;
-          user_id?: string;
-        };
-      };
+      chats: chat;
+      Message: Message;
     };
     Views: {
       [_ in never]: never;
