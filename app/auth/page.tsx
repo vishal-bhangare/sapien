@@ -20,7 +20,7 @@ const Auth = () => {
   return (
     <div className="bg-black text-white w-full min-h-full flex flex-col justify-between items-center p-8">
       <header className="self-start text-2xl font-bold w-full mb-5">
-        Sapien
+        Sepien
       </header>
       <main className="flex flex-col items-center mb-14">
         <h1 className="mb-5 font-bold">Get started</h1>
