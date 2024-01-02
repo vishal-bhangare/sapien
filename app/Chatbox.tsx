@@ -16,7 +16,7 @@ import { FaArrowRight } from "react-icons/fa";
 import * as z from "zod";
 import { Message } from "./entities";
 import useChatStore from "./states";
-
+import useKeypress from "react-use-keypress";
 import { MdOutlineImageSearch } from "react-icons/md";
 import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
@@ -53,7 +53,9 @@ const Chatbox = ({ userId }: { userId: string }) => {
   const imgRef = useRef<HTMLImageElement>(null);
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
-
+  useKeypress("Escape", () => {
+    setImgSrc("");
+  });
   function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
       console.log("called2");
@@ -66,9 +68,7 @@ const Chatbox = ({ userId }: { userId: string }) => {
       e.target.value = "";
     }
   }
-  document.addEventListener("keydown", (e) => {
-    if (e.key == "Escape") setImgSrc("");
-  });
+
   function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
     setCrop({ width: 100, height: 25, x: 10, y: 10, unit: "px" });
   }
