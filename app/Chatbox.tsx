@@ -17,37 +17,11 @@ import * as z from "zod";
 import { Message } from "./entities";
 import useChatStore from "./states";
 
-import ReactCrop, {
-  centerCrop,
-  makeAspectCrop,
-  Crop,
-  PixelCrop,
-  convertToPixelCrop,
-} from "react-image-crop";
-import { canvasPreview } from "./utils/canvasPreview";
-import "react-image-crop/dist/ReactCrop.css";
 import { MdOutlineImageSearch } from "react-icons/md";
+import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 import { createWorker } from "tesseract.js";
-
-function centerAspectCrop(
-  mediaWidth: number,
-  mediaHeight: number,
-  aspect: number
-) {
-  return centerCrop(
-    makeAspectCrop(
-      {
-        unit: "%",
-        width: 90,
-      },
-      aspect,
-      mediaWidth,
-      mediaHeight
-    ),
-    mediaWidth,
-    mediaHeight
-  );
-}
+import { canvasPreview } from "./utils/canvasPreview";
 
 const inputSchema = z.object({
   query: z.string().min(1),
@@ -79,26 +53,24 @@ const Chatbox = ({ userId }: { userId: string }) => {
   const imgRef = useRef<HTMLImageElement>(null);
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
-  const [scale, setScale] = useState(1);
-  const [rotate, setRotate] = useState(0);
-  const [aspect, setAspect] = useState<number | undefined>(16 / 9);
 
   function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
+      console.log("called2");
       setCrop(undefined); // Makes crop preview update between images.
       const reader = new FileReader();
-      reader.addEventListener("load", () =>
-        setImgSrc(reader.result?.toString() || "")
-      );
+      reader.addEventListener("load", () => {
+        setImgSrc(() => reader.result!.toString());
+      });
       reader.readAsDataURL(e.target.files[0]);
+      e.target.value = "";
     }
   }
-
+  document.addEventListener("keydown", (e) => {
+    if (e.key == "Escape") setImgSrc("");
+  });
   function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
-    if (aspect) {
-      const { width, height } = e.currentTarget;
-      setCrop(centerAspectCrop(width, height, aspect));
-    }
+    setCrop({ width: 100, height: 25, x: 10, y: 10, unit: "px" });
   }
 
   async function onDownloadCropClick() {
@@ -133,13 +105,7 @@ const Chatbox = ({ userId }: { userId: string }) => {
       offscreen.height
     );
 
-    canvasPreview(
-      imgRef.current,
-      previewCanvasRef.current,
-      completedCrop,
-      scale,
-      rotate
-    );
+    canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop);
 
     const worker = await createWorker("eng");
     startScanning(async () => {
@@ -281,7 +247,7 @@ const Chatbox = ({ userId }: { userId: string }) => {
           <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
             <div className="flex min-h-full justify-center px-2 py-12 text-center ">
               <div className="relative w-[95%] sm:w-[80%] min-h-[60vh] rounded-2xl bg-gray-800 text-slate-100 text-left shadow-xl transition-all">
-                <div className="px-5 py-4">
+                <div className="flex flex-col items-center justify-evenly px-5 py-4">
                   {!!imgSrc && (
                     <ReactCrop
                       crop={crop}
@@ -296,13 +262,11 @@ const Chatbox = ({ userId }: { userId: string }) => {
                         alt="Crop me"
                         className="h-4/5"
                         src={imgSrc}
-                        style={{
-                          transform: `scale(${scale}) rotate(${rotate}deg)`,
-                        }}
                         onLoad={onImageLoad}
                       />
                     </ReactCrop>
                   )}
+
                   {!!completedCrop && (
                     <>
                       <canvas
